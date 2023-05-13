@@ -4,6 +4,7 @@
   align-items: center;
   justify-content: space-between;
   min-height: 100vh;
+  position: relative;
 }
 #title{
   font-size: 4rem;
@@ -17,8 +18,19 @@
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
 }
-#gameboard img{
-  width: 100%;
+.grid{
+  background-size: cover;
+}
+#winbox{
+  position: absolute;
+  margin: auto;
+  inset: 0 0 0 0;
+  font-size: 5rem;
+  background: white;
+  height: min-content;
+  width: min-content;
+  white-space: nowrap;
+  display: none;
 }
 footer{
   height: 2rem;
