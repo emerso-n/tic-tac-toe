@@ -18,9 +18,18 @@
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
 }
-.grid{
+#gameboard button{
+  background-color: transparent;
+  border: none;
   background-size: cover;
 }
+.x-token-1{
+  background-image: url("images/x-es/x.gif");
+}
+.o-token-1{
+  background-image: url("images/o-es/o.gif");
+}
+
 #winbox{
   position: absolute;
   margin: auto;
@@ -31,6 +40,16 @@
   width: min-content;
   white-space: nowrap;
   display: none;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+#winbox div{
+  text-align: center;
+}
+#winbox button{
+  font-size: 3rem;
 }
 footer{
   height: 2rem;
