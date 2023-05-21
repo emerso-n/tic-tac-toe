@@ -164,3 +164,29 @@ const GameManager = (() => {
   winboxBtn.addEventListener('click', ResetGame)
   return { threeofsame }
 })()
+
+
+function minimax (freeTokens, currPlayer) {
+  // should we not have the player add their tokens first tho. don't understand why we don't do that. ig cuz it would have do go in the for loop. yeah ok fair enough. we can check for the win here tho
+  if (GameManager.threeofsame.test(currPlayer.currentTokens)) { // wait what. will currentplayer ever be winning. shiiiiit did i find a big error lmao. I think we do have to check this after adding the token
+    return currPlayer.CPUBool ? -10 : 10
+  } else if (freeTokens.length === 0) return 0
+
+  // can i make it pick the tokens it has the most current tokens in common with first for better pruning
+  // also have the min player do that too but with the max player's tokens.
+  for (let i = 0; i < freeTokens.length; i++) {
+    currPlayer.currentTokens.push(freeTokens[i])
+    if (GameManager.threeofsame.test(currPlayer.currentTokens)) { // wait what. will currentplayer ever be winning. shiiiiit did i find a big error lmao. I think we do have to check this after adding the token
+      return currPlayer.CPUBool ? -10 : 10
+    } else if (freeTokens.length === 0) return 0
+  }
+}]
+
+
+
+
+
+
+
+
+//
