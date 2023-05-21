@@ -103,11 +103,10 @@ const CPUPlayer = (() => {
         actualFreeTokens.push(grid.id)
       }
     })
-
     function minimax (freeTokens, currPlayer, lastTokens = []) {
       if (lastTokens && GameManager.threeofsame.test(lastTokens.join(''))) {
-        return currPlayer.CPUBool ? { bestScore: -10 } : { score: 10 }
-      } else if (freeTokens.length === 0) return { score: 0 }
+        return currPlayer.CPUBool ? { bestScore: -10 } : { bestScore: 10 }
+      } else if (freeTokens.length === 0) return { bestScore: 0 }
 
       const moves = []
       for (let i = 0; i < freeTokens.length; i++) {
@@ -115,29 +114,29 @@ const CPUPlayer = (() => {
 
         const newFreeSpaces = freeTokens.filter((n, index) => index !== i)
         const score = minimax(newFreeSpaces, currPlayer.CPUBool ? player.one : player.two, currPlayer.currentTokens)
-        moves.push(Object.assign(score, { move: freeTokens[i] }))
+        moves.push(Object.assign(score, { bestMove: freeTokens[i] }))
 
         currPlayer.currentTokens.pop()
+        if ((currPlayer.CPUBool && score.bestScore === 10) || (!currPlayer.CPUBool && score.bestScore === -10)) break
       }
       const bestMove = { bestScore: currPlayer.CPUBool ? -Infinity : Infinity }
       if (currPlayer.CPUBool) {
         for (let i = 0; i < moves.length; i++) {
-          if (moves[i].score > bestMove.bestScore) {
-            bestMove.bestScore = moves[i].score
-            bestMove.bestMove = moves[i].move
+          if (moves[i].bestScore > bestMove.bestScore) {
+            bestMove.bestScore = moves[i].bestScore
+            bestMove.bestMove = moves[i].bestMove
           }
         }
       } else {
         for (let i = 0; i < moves.length; i++) {
-          if (moves[i].score < bestMove.bestScore) {
-            bestMove.bestScore = moves[i].score
-            bestMove.bestMove = moves[i].move
+          if (moves[i].bestScore < bestMove.bestScore) {
+            bestMove.bestScore = moves[i].bestScore
+            bestMove.bestMove = moves[i].bestMove
           }
         }
       }
       return bestMove
     }
-
     const bestid = minimax(actualFreeTokens, player.two)
     GameManager.gridSpaces.every(grid => {
       if (grid.id === bestid.bestMove) {
