@@ -35,15 +35,39 @@ const GameManager = (() => {
     })
   }
   MakeGridSpaces()
+  function getGridSpaces () {
+    return gridSpaces
+  }
   // GAME STATES
   const gameStates = { disabled: 'disabled', enabled: 'enabled' }
   let gameState = gameStates.enabled
 
+  function shuffle (array) {
+    let currentIndex = array.length; let randomIndex
+
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex)
+      currentIndex--;
+
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]]
+    }
+
+    return array
+  }
+  let randomTokens = shuffle([1, 2, 3, 4, 5, 6])
+  let n = 0
+  let m = 0
   function PlaceToken (e) {
     if (e.target.classList.length || gameState === gameStates.disabled) {
       return
     }
-    e.target.classList.add(`${currentPlayer.token}-token-1`)
+    e.target.classList.add(`${currentPlayer.token}-token-${randomTokens[n]}`)
+    m++
+    if (m === 2) {
+      m = 0
+      n++
+    }
     currentPlayer.currentTokens.push(e.target.id)
     CheckWin()
   }
@@ -85,12 +109,15 @@ const GameManager = (() => {
     player.one.currentTokens = []
     player.two.currentTokens = []
     currentPlayer = player.one
+    randomTokens = shuffle([1, 2, 3, 4, 5, 6])
+    n = 0
+    m = 0
     winbox.style.display = 'none'
     gameState = gameStates.enabled
   // reset here
   }
   winboxBtn.addEventListener('click', ResetGame)
-  return { threeofsame, gridSpaces }
+  return { getGridSpaces, threeofsame }
 })()
 
 // CPU STUFF
@@ -98,7 +125,7 @@ const GameManager = (() => {
 const CPUPlayer = (() => {
   function PlaceToken () {
     const actualFreeTokens = []
-    GameManager.gridSpaces.forEach(grid => {
+    GameManager.getGridSpaces().forEach(grid => {
       if (!grid.classList.length) {
         actualFreeTokens.push(grid.id)
       }
@@ -138,7 +165,7 @@ const CPUPlayer = (() => {
       return bestMove
     }
     const bestid = minimax(actualFreeTokens, player.two)
-    GameManager.gridSpaces.every(grid => {
+    GameManager.getGridSpaces().every(grid => {
       if (grid.id === bestid.bestMove) {
         grid.click()
         return false

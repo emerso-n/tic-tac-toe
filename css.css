@@ -12,7 +12,7 @@
 #gameboard{
   height:  clamp(300px, min(75vh, 75vw), 1500px);
   width: clamp(300px, min(75vh, 75vw), 1500px);
-  background-image: url("images/board.gif");
+  background-image: url("images/boards/board.gif");
   background-size: cover;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -24,10 +24,41 @@
   background-size: cover;
 }
 .x-token-1{
-  background-image: url("images/x-es/x.gif");
+  background-image: url("images/x-es/xs-1.gif");
 }
+.x-token-2{
+  background-image: url("images/x-es/xs-2.gif");
+}
+.x-token-3{
+  background-image: url("images/x-es/xs-3.gif");
+}
+.x-token-4{
+  background-image: url("images/x-es/xs-4.gif");
+}
+.x-token-5{
+  background-image: url("images/x-es/xs-5.gif");
+}
+.x-token-6{
+  background-image: url("images/x-es/xs-6.gif");
+}
+
 .o-token-1{
-  background-image: url("images/o-es/o.gif");
+  background-image: url("images/o-es/os-1.gif");
+}
+.o-token-2{
+  background-image: url("images/o-es/os-2.gif");
+}
+.o-token-3{
+  background-image: url("images/o-es/os-3.gif");
+}
+.o-token-4{
+  background-image: url("images/o-es/os-4.gif");
+}
+.o-token-5{
+  background-image: url("images/o-es/os-5.gif");
+}
+.o-token-6{
+  background-image: url("images/o-es/os-6.gif");
 }
 
 #winbox{
