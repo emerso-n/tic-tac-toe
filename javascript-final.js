@@ -1,9 +1,30 @@
 console.log('JS LOADED')
 
+const gameselectview = document.querySelector('#game-select')
+const gameview = document.querySelector('#game-view')
+
 const gameboard = document.querySelector('#gameboard')
 const winbox = document.querySelector('#winbox')
 const winboxText = document.querySelector('#winbox div')
 const winboxBtn = document.querySelector('#winbox button')
+
+const vsplayerBtn = document.querySelector('#two-player')
+vsplayerBtn.addEventListener('click', StartGame)
+
+const vsai = document.querySelector('#vs-ai')
+vsai.addEventListener('click', () => {
+  $('#dropdown-content').slideToggle('fast')
+})
+
+const diffBtns = document.querySelectorAll('#dropdown-content button')
+diffBtns.forEach(btn => btn.addEventListener('click', StartGame))
+
+const backBtn = document.querySelector('#back')
+backBtn.addEventListener('click', () => {
+  gameview.classList.add('hide')
+  gameselectview.classList.remove('hide')
+  GameManager.ResetGame()
+})
 
 // PLAYER CREATION
 
@@ -11,9 +32,22 @@ const playerFactory = (token, CPUBool) => {
   const currentTokens = []
   return { token, currentTokens, CPUBool }
 }
-const player = { one: playerFactory('x', false), two: playerFactory('o', true) }
+const player = { one: '', two: '' }
 
-let currentPlayer = player.one
+let currentPlayer
+
+function StartGame (e) {
+  gameselectview.classList.add('hide')
+  gameview.classList.remove('hide')
+  player.one = playerFactory('x', false)
+  if (e.target.parentElement.id !== 'two-player') {
+    player.two = playerFactory('o', true)
+    CPUPlayer.SetDifficulty(e.target.parentElement.id)
+    $('#dropdown-content').slideToggle('fast')
+  } else player.two = playerFactory('o', false)
+
+  currentPlayer = player.one
+}
 
 // GAMEMANAGER
 const GameManager = (() => {
@@ -82,25 +116,26 @@ const GameManager = (() => {
     if (threeofsame.test(currentPlayer.currentTokens.join(''))) {
       EndGame(currentPlayer.token)
     } else if (CheckTie()) {
-      EndGame('Tie')
+      EndGame('tie')
     } else SwitchPlayer()
   }
   function CheckTie () {
     return gridSpaces.every(grid => {
-      if (!grid.classList.length) { // checks for empty grid spaces and returns false if it finds one, which breaks the loop and returns false because no there is no tie bc there are still unused spaces
+      if (!grid.classList.length) {
         return false
       }
-      return true // if no spaces are empty then there is indeed a tie
+      return true
     })
   }
 
   function EndGame (endType) {
-    winbox.style.display = 'flex'
-    if (endType === 'Tie') endType = 'Nobody'
-    winboxText.innerText = `${endType} Wins!`
+    winbox.classList.remove('hide')
+    winboxText.innerHTML = `<img src="images/${endType}-win.gif" alt="${endType}" />`
+    if (endType !== 'tie') winboxText.innerHTML += '<img src="images/wins.gif" alt="wins" />'
+    gameboard.classList.add('whiteout')
     gameState = gameStates.disabled
   }
-
+  
   function ResetGame () {
     gridSpaces.forEach(grid => {
       grid.remove()
@@ -112,17 +147,23 @@ const GameManager = (() => {
     randomTokens = shuffle([1, 2, 3, 4, 5, 6])
     n = 0
     m = 0
-    winbox.style.display = 'none'
+    gameboard.classList.remove('whiteout')
+    winbox.classList.add('hide')
     gameState = gameStates.enabled
   // reset here
   }
   winboxBtn.addEventListener('click', ResetGame)
-  return { getGridSpaces, threeofsame }
+  return { getGridSpaces, threeofsame, ResetGame }
 })()
 
 // CPU STUFF
 
 const CPUPlayer = (() => {
+  const CPUDifficulities = { easy: 'easy', hard: 'hard', impossible: 'impossible' }
+  let CPUDifficulty
+  function SetDifficulty (diff) {
+    CPUDifficulty = CPUDifficulities[diff]
+  }
   function PlaceToken () {
     const actualFreeTokens = []
     GameManager.getGridSpaces().forEach(grid => {
@@ -164,14 +205,44 @@ const CPUPlayer = (() => {
       }
       return bestMove
     }
-    const bestid = minimax(actualFreeTokens, player.two)
-    GameManager.getGridSpaces().every(grid => {
-      if (grid.id === bestid.bestMove) {
-        grid.click()
-        return false
+    function getRandomInt (max) {
+      return Math.floor(Math.random() * max)
+    }
+
+    function getRandom () {
+      return actualFreeTokens[getRandomInt(actualFreeTokens.length)]
+    }
+    function getBest () {
+      const bestid = minimax(actualFreeTokens, player.two)
+      return bestid.bestMove
+    }
+
+    function clickGrid (id) {
+      GameManager.getGridSpaces().every(grid => {
+        if (grid.id === id) {
+          grid.click()
+          return false
+        }
+        return true
+      })
+    }
+
+    if (CPUDifficulty === CPUDifficulities.easy) {
+      clickGrid(getRandom())
+    }
+    if (CPUDifficulty === CPUDifficulities.hard) {
+      const int = getRandomInt(4)
+      if (int === 0) {
+        clickGrid(getRandom())
+        console.log('random')
+      } else {
+        clickGrid(getBest())
+        console.log('best')
       }
-      return true
-    })
+    }
+    if (CPUDifficulty === CPUDifficulities.impossible) {
+      clickGrid(getBest())
+    }
   }
-  return { PlaceToken }
+  return { PlaceToken, SetDifficulty }
 })()

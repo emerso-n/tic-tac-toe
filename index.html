@@ -13,18 +13,59 @@
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"
 		/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="javascript-final.js" defer></script>
 		<title>Tic-Tac-Toe</title>
 	</head>
 	<body>
 		<div id="page_con">
-			<div id="title">
-				<!-- <img src="images/Title.png" alt="tic-tac-toe"> -->
-				Tic-Tac-Toe
+			
+			<div id="game-select">
+				<div>
+					<div id="title">
+						<img src="images/title.gif" alt="tic-tac-toe" />
+					</div>
+					<div id="btns-div">
+						<button id="two-player">
+							<img src="images/2players.gif" alt="2 players" />
+						</button>
+						<div id="dropdown">
+							<button id="vs-ai">
+								<img src="images/vsai.gif" alt="versus ai" />
+							</button>
+							<div id="dropdown-content" style="display: none">
+								<button id="easy">
+									<img src="images/difficulties/easy.gif" alt="easy">
+								</button>
+								<button id="hard">
+									<img src="images/difficulties/hard.gif" alt="hard">
+								</button>
+								<button id="impossible">
+									<img src="images/difficulties/impossible.gif" alt="impossible">
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div id="gameboard"></div>
-			<div id="winbox"><div>You Win!</div><button>Play Again</button></div>
+
+			<div id="game-view" class="hide">
+				<div id="title">
+					<img src="images/title.gif" alt="tic-tac-toe" />
+				</div>
+				<div id="gameboard_con"><div id="gameboard"></div></div>
+				<button id="back">
+					<img src="images/back.gif" alt="back to main menu" />
+				</button>
+			</div>
+
+			<div id="winbox" class="hide">
+				<div><img src="images/you.gif" alt="you" /><img src="images/win.gif" alt="win" /></div>
+				<button><img src="images/playagain.gif" alt="play again" /></button>
+			</div>
+
 			<footer>a site by emers0-n</footer>
+
 		</div>
 	</body>
 </html>
